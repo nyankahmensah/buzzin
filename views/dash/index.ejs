@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>Buzzin - Dashboard</title>
+<link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+<link href="../css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+	<div id="wrapper">
+		<div id="content-wrapper" class="d-flex flex-column">
+			<div id="content">
+				<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 fixed-top shadow">
+					<a class="text-primary d-flex align-items-center justify-content-center navbar-brand" href="/dash">
+						<div class="sidebar-brand-icon rotate-n-15">
+							<i class="fas fa-bus"></i>
+						</div>
+						<div class="sidebar-brand-text mx-3">Buzzin</div>
+					</a>
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item dropdown no-arrow">
+							<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="mr-2 d-none d-lg-inline text-gray-600 small"><%- user.profile.firstname+" "+user.profile.lastname %></span>
+								<img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+							</a>
+							<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+								<a class="dropdown-item" href="/dash/profile">
+									<i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+									Profile
+								</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+									<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+									Logout
+								</a>
+							</div>
+						</li>
+					</ul>
+				</nav>
+				<div class="container-fluid mt-5 pt-5">
+					<div class="d-sm-flex align-items-center justify-content-between mb-4">
+						<h1 class="h3 mb-0 text-gray-800">Welcome <%- user.profile.firstname %>,</h1>
+					</div>
+					<div class="jumbotron mb-4">
+						<%if (!booking) { %>
+						<div class="w-100 text-center justify-content-center">
+							<div class="m-2 text-primary text-lg font-weight-bold">No Bus Schedule Yet</div>
+							<div class="m-2">Click the button below to add a bus schedule</div>
+							<div class="m-2">
+								<a class="btn btn-primary" href="#" data-toggle="modal" data-target="#addScheduleModal">
+									<i class="fas fa-plus fa-sm fa-fw mr-2 text-white"></i>
+									Add Schedule
+								</a>
+							</div>
+						</div>
+						<% } %>
+						<%if (booking) { %>
+						<div class="w-100 text-center justify-content-center">
+							<div class="m-3 text-primary text-lg font-weight-bold">Your Schedule</div>
+							<div class="text-lg m-2"><span class="text-primary font-weight-bold">Time Shift: </span><%= booking.schedule.time %></div>
+							<div class="text-lg m-2"><span class="text-primary font-weight-bold">Destination: </span><%= booking.schedule.destination %></div>
+							<div class="text-lg m-2"><span class="text-primary font-weight-bold">Bus Number: </span><%= booking.schedule.bus.number %></div>
+						</div>
+						<% } %>
+					</div>
+				</div>
+			</div>
+			<footer class="sticky-footer bg-white">
+				<div class="container my-auto">
+					<div class="copyright text-center my-auto">
+						<span>Copyright &copy; Buzzin 2020</span>
+					</div>
+				</div>
+			</footer>
+		</div>
+	</div>
+	<a class="scroll-to-top rounded" href="#page-top">
+		<i class="fas fa-angle-up"></i>
+	</a>
+
+	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+				<div class="modal-footer">
+					<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+					<a class="btn btn-primary" href="/logout">Logout</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="addScheduleModal" tabindex="-1" role="dialog" aria-labelledby="addScheduleModal" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Add Schedule</h5>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				<form method="post" action="/dash/booking">
+					<div class="modal-body">
+						<div class="form-group">
+							<label>Time Shift</label>
+							<select class="form-control" name="time" id="time" required>
+								<option value="">---Select Shift---</option>
+								<option value="MORNING">MORNING</option>
+								<option value="AFTERNOON">AFTERNOON</option>
+								<option value="EVENING">EVENING</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label>Destination</label>
+							<select class="form-control" name="schedule" id="schedule" required>
+								<option value="">---Select Destination---</option>
+								<% schedules.forEach(function(schedule){ %>
+				                    <option value=<%= schedule._id %> ><%= schedule.destination %></option>
+			                    <% }); %>
+							</select>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+						<button class="btn btn-primary" type="submit">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script src="../vendor/jquery/jquery.min.js"></script>
+	<script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+	<script src="../js/sb-admin-2.min.js"></script>
+</body>
+
+</html>
